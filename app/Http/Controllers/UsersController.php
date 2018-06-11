@@ -12,6 +12,9 @@ class UsersController extends Controller
       $this->middleware('auth', [
         'except' => ['show', 'create', 'store']
       ]);
+      $this->middleware('guest', [
+        'only' => ['create']
+      ]);
     }
 
     public function create(){
@@ -41,6 +44,7 @@ class UsersController extends Controller
     }
 
     public function edit(User $user){
+      $this->authorize('update', $user);
       return view('users.edit', compact('user'));
     }
 
@@ -51,7 +55,7 @@ class UsersController extends Controller
       ]);
 
       $data=[];
-      $data['name']=>$request->name;
+      $data['name']=$request->name;
       if($request->password){
         $data['password']=bcrypt($request->password);
       }
